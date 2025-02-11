@@ -1,0 +1,218 @@
+// import { GMAP_API_KEY, GMAP_MAP_ID_1 } from '@/config/env';
+// import { Loader } from '@googlemaps/js-api-loader';
+// import { useEffect, useRef, useState } from 'react';
+// import { FormField } from '../forms/form-field/form-field';
+// import Marker from './marker';
+
+// /* CONSTANTS */
+// const FALLBACK_CENTER = { lat: -6.914744, lng: 107.609810 };
+
+// interface GoogleMapsComponentProps<T> {
+//   isClickable?: boolean;
+//   isSearchVisible?: boolean;
+//   searchCallback?: (value: T) => void;
+//   pinCallback?: (value: T) => void;
+//   position?: google.maps.LatLngLiteral;
+// }
+
+// const InternalGoogleMaps = (props: GoogleMapsComponentProps<any>) => {
+//   const defaultCenter = props?.position || FALLBACK_CENTER;
+//   const [searchBarQuery, setSearchBarQuery] = useState('');
+//   const [gmap, setGmap] = useState<google.maps.Map>();
+//   const [geocoder, setGeocoder] = useState<google.maps.Geocoder>();
+//   const [marker, setMarker] = useState<google.maps.marker.AdvancedMarkerElement>();
+
+//   const markerRef = useRef<google.maps.marker.AdvancedMarkerElement>();
+
+//   function initializeMap() {
+//     const loader = new Loader({
+//       apiKey: GMAP_API_KEY,
+//       version: 'quarterly',
+//       libraries: ['core', 'geocoding', 'marker']
+//     });
+
+//     const mapOptions: google.maps.MapOptions = {
+//       mapId: GMAP_MAP_ID_1,
+//       center: defaultCenter,
+//       zoom: 15
+//     };
+
+//     loader
+//       .importLibrary('core')
+//       .then(() => {
+//         const map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
+//         const geo = new google.maps.Geocoder();
+//         const mark = new google.maps.marker.AdvancedMarkerElement({
+//           position,
+//           map,
+//           gmpDraggable: true,
+//         });
+
+//         setGmap(map);
+//         setGeocoder(geo);
+//         setMarker(mark);
+//       })
+//       .catch((e) => { console.error(e); });
+//   }
+
+//   function placeMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, map: google.maps.Map) {
+//     // if (markerRef.current) {
+//     //   markerRef.current.position = position;
+//     // }
+//     // else {
+//     //   const newMarker = new google.maps.marker.AdvancedMarkerElement({
+//     //     position: position,
+//     //     map: map,
+//     //     gmpDraggable: true,
+//     //   });
+//     //   markerRef.current = newMarker;
+//     // }
+//     // setMarker((prev) => ({ ...prev, position }));
+//   }
+
+//   function geocodeSearch(query: string | google.maps.LatLng): Promise<google.maps.GeocoderResponse> {
+//     if (!geocoder || !gmap) return Promise.reject('map or geocoder undefined');
+
+//     let payload = {};
+//     if (typeof query === 'string') {
+//       payload = {
+//         address: query,
+//         componentRestrictions: { country: 'ID' },
+//       };
+//     } else if (query instanceof google.maps.LatLng) {
+//       payload = {
+//         location: query
+//       };
+//     }
+
+//     return geocoder.geocode(payload);
+//   }
+
+//   function searchByText(query: string) {
+//     if (!gmap || (!query || !query?.length)) return;
+
+//     try {
+//       geocodeSearch(query).then(({ results }) => {
+//         console.log(results);
+//         if (!results) { throw new Error('results undefined'); }
+//         // TODO: handle post search by input action here
+//         if (results?.[0]) {
+//           const location = results[0].geometry.location;
+//           gmap.setCenter(location);
+//           placeMarker(location, gmap);
+//           props?.searchCallback && props.searchCallback({ raw: results });
+//         }
+//       });
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   }
+
+//   function searchByPin(query: google.maps.LatLng) {
+//     if (!query) return;
+
+//     try {
+//       geocodeSearch(query).then(({ results }) => {
+//         if (!results) { throw new Error('results undefined'); }
+//         // TODO: handle post search by clicking map action here
+//         console.log(results);
+//         props?.pinCallback && props.pinCallback({ raw: results });
+//       });
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   }
+
+//   function handleEventMapClick(event: google.maps.MapMouseEvent) {
+//     if (!gmap) return;
+
+//     const position = event.latLng as google.maps.LatLng;
+//     placeMarker(position, gmap);
+//     searchByPin(position);
+//   }
+
+//   useEffect(() => {
+//     initializeMap();
+//   }, []);
+
+//   // Reset marker on component unmount
+//   useEffect(() => {
+//     return () => {
+//       if (markerRef?.current) {
+//         markerRef.current.position = null;
+//       }
+//     };
+//   }, [markerRef?.current]);
+
+//   // Load listener here
+//   // Ensure libs are loaded before trying to add listener with libs dependencies
+//   useEffect(() => {
+//     if (gmap && geocoder) {
+//       console.log('Map mounted');
+//       props?.isClickable && gmap.addListener('click', (event: google.maps.MapMouseEvent) => handleEventMapClick(event));
+
+//       if (props?.position) {
+//         gmap && gmap.panTo(props.position);
+//       }
+//     }
+//     // unmount remove listener
+//     return () => {
+//       if (gmap) {
+//         console.log('Map unmounted');
+//         google.maps.event.clearListeners(gmap, 'click');
+//       }
+//     };
+//   }, [gmap, geocoder, props?.position]);
+
+//   return (
+//     <div>
+//       {
+//         props?.isSearchVisible && (
+//           <FormField
+//             name="search"
+//             component="search"
+//             style={{ width: '100%' }}
+//             componentProps={{
+//               value: searchBarQuery,
+//               onChange: (e) => { setSearchBarQuery(e.target.value); },
+//               onSearch: searchByText
+//             }}
+//           />
+//         )
+//       }
+//       <div id="map" style={{ width: '100%', height: '400px' }}>
+//         {/* Automatically set by map */}
+//       </div>
+//     </div>
+//   );
+// };
+
+// const InternalGmaps = () => {
+//   const mapRef = useRef<HTMLElement>(null);
+
+//   useEffect(() => {
+//     new window.google.maps.Map(mapRef.current, {
+//       center: FALLBACK_CENTER,
+//       zoom: 15,
+//     });
+//     console.log('de');
+//   });
+
+//   return (
+//     <div ref={mapRef} id="map" style={{ width: '100%', height: '400px' }}>
+//       {/* Automatically set by map */}
+//       <Marker
+//         position={FALLBACK_CENTER}
+//         draggable
+//         onClick={() => {
+//           console.log('mark click');
+//         }}
+//         onDragEnd={(e, lat, lng) => {
+//           console.log('drag end');
+//         }}
+//       />
+//     </div>
+//   );
+// };
+
+// export default InternalGmaps;

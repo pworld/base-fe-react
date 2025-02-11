@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'Poppins';
+  src: local('Poppins'), url(/fonts/Poppins-Regular.ttf) format('truetype');
+}
+
+.ant-picker-outlined {
+  background: #fff;
+}
+
+.app-input {
+  &.prepend {
+    input {
+      text-align: right;
+    }
+  }
+}
+
+.app-text {
+  &.prepend {
+    text-align: right;
+  }
+}
+
+// wrapper base
+.app-wrapper-detail {
+  padding: 0px 10px 0px 10px;
+}
+
+// text
+.app-text-bold {
+  font-weight: bold;
+}
+
+.app-text-right {
+  text-align: right;
+}
+
+.app-text-color-green {
+  color: green;
+}
+
+.app-text-color-blue {
+  color: cornflowerblue;
+}
+
+.app-text-color-coral {
+  color: coral;
+}
+
+.app-text-italic {
+  font-style: italic;
+}
+
+// margin
+.app-mb-15 {
+  margin-bottom: 15px !important;
+}
+
+.app-mb-20 {
+  margin-bottom: 20px !important;
+}
+
+// padding {
+.app-padding-10 {
+  padding: 10px;
+}
+
+// border
+.app-border-bottom {
+  border-bottom: 1px solid #E2E8F0;
+}

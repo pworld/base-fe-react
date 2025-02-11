@@ -1,0 +1,12 @@
+.app-form-field {
+  margin-bottom: 10px !important;
+
+  &.ant-form-item {
+    .ant-form-item-label {
+      label {
+        color: #0B0B0B;
+        font-weight: 500;
+      }
+    }
+  }
+}

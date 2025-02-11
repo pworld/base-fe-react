@@ -1,0 +1,13 @@
+.app-card-wrapper {
+  padding: 10px;
+  border-radius: 10px;
+
+  &.basic {
+    background-color: white;
+    border: 1px solid rgb(206, 206, 206);
+  }
+
+  &.dark {
+    background-color: #F5F8FB;
+  }
+}

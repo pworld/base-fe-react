@@ -1,0 +1,69 @@
+include:
+  - project: platform/infrastructure/gitlab-ci
+    file: /components/gcr-push.yml
+  - project: platform/infrastructure/gitlab-ci
+    file: /components/argocd-sync.yml
+
+stages:
+  - docker-push
+  - sync-cd
+
+###############
+### STAGING ###
+###############
+
+staging-docker-push:
+  stage: docker-push
+  tags:
+    - docker-in-docker
+  extends:
+    - .component-gcr-push
+  variables:
+    PROJECT_GROUP: universal
+    ENV_BUILD: staging
+    DOCKERFILE_PATH: Dockerfile.staging
+    DOCKER_BUILD_PATH: .
+  only:
+    refs:
+      - staging
+
+staging-argocd-sync:
+  stage: sync-cd
+  variables:
+    ARGOCD_APP: app-stg-fe-web-admin
+    HELM_APP_NAMES: main
+  extends:
+    - .component-argocd-sync
+  only:
+    refs:
+      - staging
+
+##################
+### PRODUCTION ###
+##################
+
+production-docker-push:
+  stage: docker-push
+  tags:
+    - docker-in-docker
+  extends:
+    - .component-gcr-push
+  variables:
+    PROJECT_GROUP: universal
+    ENV_BUILD: production
+    DOCKERFILE_PATH: Dockerfile
+    DOCKER_BUILD_PATH: .
+  only:
+    refs:
+      - production
+
+production-argocd-sync:
+  stage: sync-cd
+  variables:
+    ARGOCD_APP: app-prod-fe-web-admin
+    HELM_APP_NAMES: main
+  extends:
+    - .component-argocd-sync
+  only:
+    refs:
+      - production

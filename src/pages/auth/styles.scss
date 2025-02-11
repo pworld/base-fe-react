@@ -1,0 +1,74 @@
+.register-section {
+  .sign-up-text {
+    color: rgb(64, 150, 255);
+    text-align: center;
+    margin-bottom: 0px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 700;
+    overflow-wrap: break-word;
+    hyphens: manual;
+    text-overflow: unset;
+    white-space: pre-wrap;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .already-have-account {
+    text-align: right;
+    padding-bottom: 15px;
+  }
+
+  .button-submit-register {
+    width: 100%;
+    margin: auto;
+  }
+
+  .ant-form-item {
+    margin-bottom: 10px;
+  }
+}
+
+.login-section {
+  .login-card {
+    width: 400px;
+    margin: auto !important;
+
+    .form-section {
+      label {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .sign-in-text {
+    color: rgb(64, 150, 255);
+    text-align: center;
+    margin-bottom: 0px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: bold;
+    overflow-wrap: break-word;
+    hyphens: manual;
+    text-overflow: unset;
+    white-space: pre-wrap;
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+
+  .dont-have-account {
+    text-align: right;
+    padding-bottom: 5px;
+    padding-top: 20px;
+  }
+
+  .button-submit-login {
+    width: 100%;
+    margin: auto;
+    margin-top: 3rem;
+  }
+
+  .ant-form-item {
+    margin-bottom: 10px;
+  }
+}

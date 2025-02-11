@@ -1,0 +1,20 @@
+.app-divider {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+
+  &.basic {
+    margin-bottom: 5px;
+  }
+
+  &.card {
+    padding: 5px 10px 5px 10px;
+    background-color: #F1F5F9;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
